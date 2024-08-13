@@ -7,6 +7,10 @@ const routes = [
     path: "/",
     component: GeneratePage
   },
+  {
+    path: "/generate",
+    component: GeneratePage
+  },
 ];
 
 const router = createRouter({

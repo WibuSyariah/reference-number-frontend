@@ -2,16 +2,26 @@
 import { mapWritableState, mapActions } from "pinia";
 import { useReferenceNumberStore } from "@/stores/referenceNumber";
 import { FormKit } from "@formkit/vue";
+import { useCompanyStore } from "@/stores/company";
+import { useDivisionStore } from "@/stores/division";
 export default {
   name: "GeneratePage",
   data() {
     return {};
   },
+  mounted() {
+    this.fetchCompany();
+    this.fetchDivision();
+  },
   computed: {
     ...mapWritableState(useReferenceNumberStore, ["referenceNumber"]),
+    ...mapWritableState(useCompanyStore, ["companyDropdown"]),
+    ...mapWritableState(useDivisionStore, ["divisionDropdown"]),
   },
   methods: {
     ...mapActions(useReferenceNumberStore, ["generate"]),
+    ...mapActions(useCompanyStore, ["fetchCompany"]),
+    ...mapActions(useDivisionStore, ["fetchDivision"]),
 
     copyToClipboard() {
       navigator.clipboard
@@ -27,10 +37,8 @@ export default {
     async handleSubmit(values) {
       try {
         await this.generate(values);
-        // Prevent default form submission
-        return false;
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
     },
   },
@@ -42,19 +50,13 @@ export default {
     <div
       class="container flex flex-col items-center bg-gray-100 pt-8 pb-4 border rounded border-hidden w-96 border-transparent shadow mx-auto"
     >
-      <FormKit type="form" @submit="handleSubmit">
+      <FormKit type="form" @submit="handleSubmit" submit-label="Generate">
         <FormKit
           type="select"
           label="Company"
           placeholder="Select your company"
-          name="companyCode"
-          :options="{
-            MGM: 'MODA GLOBAL MARITIM',
-            MAP: 'MAZO ARMADA PASIFIK',
-            ATP: 'AURORA TRANS PASIFIK',
-            GTG: 'GEO TEKNO GLOBALINDO',
-            UGS: 'UNO GLOBAL SATELIT',
-          }"
+          name="companyId"
+          :options="companyDropdown"
           validation="required"
         />
         <FormKit
@@ -62,25 +64,15 @@ export default {
           name="applicantName"
           id="applicantName"
           validation="required"
-          label="Name"
+          label="From"
           placeholder="John Doe"
         />
         <FormKit
           type="select"
           label="Division"
           placeholder="Select your division"
-          name="division"
-          :options="{
-            MANAGEMENT: 'MANAGEMENT',
-            OPERATIONAL: 'OPERATIONAL',
-            'HUMAN CAPITAL': 'HUMAN CAPITAL',
-            IT: 'IT',
-            FINANCE: 'FINANCE',
-            'TAX & ACCOUNTING': 'TAX & ACCOUNTING',
-            PROCUREMENT: 'PROCUREMENT',
-            COMMERCIAL: 'COMMERCIAL',
-            LEGAL: 'LEGAL',
-          }"
+          name="divisionId"
+          :options="divisionDropdown"
           validation="required"
         />
         <FormKit
@@ -88,7 +80,7 @@ export default {
           name="letterSubject"
           id="letterSubject"
           validation="required"
-          label="Letter Subject"
+          label="Subject"
           placeholder="Subject of the letter"
         />
         <FormKit
@@ -96,7 +88,7 @@ export default {
           name="addressedTo"
           id="addressedTo"
           validation="required"
-          label="Addressed To"
+          label="To"
           placeholder="John Doe"
         />
         <br />

@@ -20,6 +20,10 @@ export const useReferenceNumberStore = defineStore({
           method: "post",
           url: `${baseUrl}${apiPrefix}/reference-number/generate`,
           data: input,
+          headers: {
+            Authorization: `Bearer `,
+          },
+          withCredentials: false
         });
 
         this.referenceNumber = res.data.data.referenceNumber;
@@ -27,23 +31,18 @@ export const useReferenceNumberStore = defineStore({
         // Check if the error is an axios error
         if (error.response.data.statusCode === 401) {
           console.error("Response error:", error.response.data);
-          toast.error(
-            `Please login again`,
-            {
-              position: "top-right",
-              duration: 3000,
-              queue: true,
-            },
-          );
+          toast.error(`Please login again`, {
+            position: "top-right",
+            duration: 3000,
+            queue: true,
+          });
         } else {
-          toast.error(
-            `Something went wrong`,
-            {
-              position: "top-right",
-              duration: 3000,
-              queue: true,
-            },
-          );
+          console.log(error)
+          toast.error(`Something went wrong`, {
+            position: "top-right",
+            duration: 3000,
+            queue: true,
+          });
         }
       }
     },
