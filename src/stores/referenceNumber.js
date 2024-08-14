@@ -15,15 +15,15 @@ export const useReferenceNumberStore = defineStore({
   getters: {},
   actions: {
     async generate(input) {
+      const accessToken = localStorage.getItem("accessToken")
       try {
         const res = await axios({
           method: "post",
           url: `${baseUrl}${apiPrefix}/reference-number/generate`,
           data: input,
           headers: {
-            Authorization: `Bearer `,
+            Authorization: `Bearer ${accessToken}`,
           },
-          withCredentials: false
         });
 
         this.referenceNumber = res.data.data.referenceNumber;

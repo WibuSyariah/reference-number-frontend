@@ -12,5 +12,34 @@ export const useUserStore = defineStore({
     isLoggedIn: false,
   }),
   getters: {},
-  actions: {},
+  actions: {
+    async login(input) {
+      try {
+        const res = await axios({
+          method: "post",
+          url: `${baseUrl}${apiPrefix}/user/login`,
+          data: input,
+        });
+
+        return res
+      } catch (error) {
+        // Check if the error is an axios error
+        if (error.response) {
+          console.error(error.response.data);
+          toast.error(`${error.response.data.message}`, {
+            position: "top-right",
+            duration: 3000,
+            queue: true,
+          });
+        } else {
+          console.log(error);
+          toast.error(`Something went wrong`, {
+            position: "top-right",
+            duration: 3000,
+            queue: true,
+          });
+        }
+      }
+    },
+  },
 });

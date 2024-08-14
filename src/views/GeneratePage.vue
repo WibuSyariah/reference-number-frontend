@@ -4,6 +4,7 @@ import { useReferenceNumberStore } from "@/stores/referenceNumber";
 import { FormKit } from "@formkit/vue";
 import { useCompanyStore } from "@/stores/company";
 import { useDivisionStore } from "@/stores/division";
+import Sidebar from "@/components/Sidebar.vue";
 export default {
   name: "GeneratePage",
   data() {
@@ -42,10 +43,14 @@ export default {
       }
     },
   },
+  components: {
+    Sidebar
+  }
 };
 </script>
 
 <template>
+  <Sidebar></Sidebar>
   <div class="container flex items-center justify-between mt-8">
     <div
       class="container flex flex-col items-center bg-gray-100 pt-8 pb-4 border rounded border-hidden w-96 border-transparent shadow mx-auto"

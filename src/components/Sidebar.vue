@@ -4,17 +4,33 @@ export default {
   data() {
     return {
       showSidebar: true,
+      sidebarIcon: "arrow_left",
       showMasterData: false,
+      masterDataIcon: "keyboard_arrow_down",
     };
   },
 
   methods: {
     masterDataToggle() {
+      if (this.masterDataIcon === "keyboard_arrow_down") {
+        this.masterDataIcon = "keyboard_arrow_up";
+      } else {
+        this.masterDataIcon = "keyboard_arrow_down";
+      }
       this.showMasterData = !this.showMasterData;
     },
     sidebarToggle() {
+      if (this.sidebarIcon === "arrow_left") {
+        this.sidebarIcon = "arrow_right";
+      } else {
+        this.sidebarIcon = "arrow_left";
+      }
       this.showSidebar = !this.showSidebar;
     },
+    logoutHandler() {
+      localStorage.clear()
+      this.$router.push("/login")
+    }
   },
 };
 </script>
@@ -49,7 +65,7 @@ export default {
             @click="masterDataToggle"
           >
             <span>Master Data</span>
-            <i class="material-symbols-outlined">menu</i>
+            <i class="material-symbols-outlined">{{ masterDataIcon }}</i>
           </li>
           <ul v-show="showMasterData" class="border-t">
             <li>
@@ -90,6 +106,7 @@ export default {
         <li>
           <button
             class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
+            @click="logoutHandler"
           >
             Log Out
           </button>
@@ -108,7 +125,7 @@ export default {
       @click="sidebarToggle"
       class="cursor-pointer justify-center flex bg-gray-400 shadow rounded-r items-center text-white"
     >
-      <i class="material-symbols-outlined rotate-90">menu</i>
+      <i class="material-symbols-outlined">{{ sidebarIcon }}</i>
     </div>
   </div>
 </template>
