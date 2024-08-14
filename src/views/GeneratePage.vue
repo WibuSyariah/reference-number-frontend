@@ -1,7 +1,7 @@
 <script>
 import { mapWritableState, mapActions } from "pinia";
-import { useReferenceNumberStore } from "@/stores/referenceNumber";
 import { FormKit } from "@formkit/vue";
+import { useReferenceNumberStore } from "@/stores/referenceNumber";
 import { useCompanyStore } from "@/stores/company";
 import { useDivisionStore } from "@/stores/division";
 import Sidebar from "@/components/Sidebar.vue";

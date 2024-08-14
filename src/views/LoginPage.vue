@@ -6,7 +6,7 @@ export default {
   name: "LoginPage",
   data() {
     return {
-      accessToken: localStorage.getItem("accessToken")
+      accessToken: localStorage.getItem("accessToken"),
     };
   },
   computed: {
@@ -19,12 +19,16 @@ export default {
       try {
         const res = await this.login(values);
 
-        localStorage.setItem("accessToken", res.data.data.accessToken);
-        localStorage.setItem("role", res.data.data.role);
-        this.isLoggedIn = true
-        this.$router.push("/");
+        if (res.status === 200) {
+          // Check for successful response
+          localStorage.setItem("accessToken", res.data.data.accessToken);
+          localStorage.setItem("role", res.data.data.role);
 
-        this.$toast.success("Logged in successfully");
+          this.isLoggedIn = true;
+          this.$router.push("/");
+
+          this.$toast.success("Logged in successfully");
+        }
       } catch (error) {
         console.error(error);
       }

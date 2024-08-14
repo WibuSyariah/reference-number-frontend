@@ -15,18 +15,22 @@ export const useDivisionStore = defineStore({
   getters: {},
   actions: {
     async fetchDivision(params) {
+      const accessToken = localStorage.getItem("accessToken");
       try {
         const res = await axios({
           method: "get",
           url: `${baseUrl}${apiPrefix}/division`,
           params: params ? params : {},
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         });
 
         this.divisions = res.data.data.divisions;
         this.divisionDropdown = this.divisions.map((division) => ({
           label: division.name,
           value: division.id,
-        }));        
+        }));
       } catch (error) {
         toast.error(`Something went wrong`, {
           position: "top-right",

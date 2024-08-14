@@ -19,7 +19,7 @@ export const useReferenceNumberStore = defineStore({
       try {
         const res = await axios({
           method: "post",
-          url: `${baseUrl}${apiPrefix}/reference-number/generate`,
+          url: `${baseUrl}${apiPrefix}/reference-number`,
           data: input,
           headers: {
             Authorization: `Bearer ${accessToken}`,

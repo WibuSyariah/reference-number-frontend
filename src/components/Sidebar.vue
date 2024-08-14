@@ -1,4 +1,7 @@
 <script>
+import { FormKit } from "@formkit/vue";
+import { useUserStore } from "@/stores/user";
+import { mapActions } from "pinia";
 export default {
   name: "Sidebar",
   data() {
@@ -7,10 +10,18 @@ export default {
       sidebarIcon: "arrow_left",
       showMasterData: false,
       masterDataIcon: "keyboard_arrow_down",
+      showModal: false,
     };
   },
-
+  mounted() {
+    document.addEventListener("keydown", this.handleEscKey);
+  },
+  beforeUnmount() {
+    document.removeEventListener("keydown", this.handleEscKey);
+  },
   methods: {
+    ...mapActions(useUserStore, ["changePassword"]),
+
     masterDataToggle() {
       if (this.masterDataIcon === "keyboard_arrow_down") {
         this.masterDataIcon = "keyboard_arrow_up";
@@ -28,9 +39,37 @@ export default {
       this.showSidebar = !this.showSidebar;
     },
     logoutHandler() {
-      localStorage.clear()
-      this.$router.push("/login")
-    }
+      localStorage.clear();
+      this.$router.push("/login");
+    },
+    modalToggle() {
+      this.showModal = !this.showModal;
+    },
+    handleEscKey(event) {
+      if (event.key === "Escape") {
+        this.showModal = false;
+      }
+    },
+    async changePasswordHandler(values) {
+      try {
+        const res = await this.changePassword(values);
+
+        if (res.status === 200) {
+          // Check for successful response
+          this.$toast.success(`Password changed successfully`);
+          this.modalToggle();
+        } else {
+          console.error(res.data); // Handle specific error message
+          toast.error(`Password change failed. Please try again.`, {
+            position: "top-right",
+            duration: 3000,
+            queue: true,
+          });
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
 };
 </script>
@@ -96,20 +135,17 @@ export default {
         </ul>
       </div>
       <ul class="mb-4">
-        <li>
-          <button
-            class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
-          >
-            Change Password
-          </button>
+        <li
+          class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 cursor-pointer"
+          @click="modalToggle"
+        >
+          Change Password
         </li>
-        <li>
-          <button
-            class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
-            @click="logoutHandler"
-          >
-            Log Out
-          </button>
+        <li
+          class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 cursor-pointer"
+          @click="logoutHandler"
+        >
+          Log Out
         </li>
         <a href="https://github.com/WibuSyariah" target="_blank">
           <li
@@ -126,6 +162,39 @@ export default {
       class="cursor-pointer justify-center flex bg-gray-400 shadow rounded-r items-center text-white"
     >
       <i class="material-symbols-outlined">{{ sidebarIcon }}</i>
+    </div>
+  </div>
+  <div
+    v-if="showModal"
+    class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto"
+  >
+    <div
+      class="modal-backdrop fixed inset-0 bg-black opacity-50"
+      @click="modalToggle"
+    ></div>
+    <div class="flex flex-col modal bg-gray-100 rounded-lg absolute p-8">
+      <FormKit
+        type="form"
+        @submit="changePasswordHandler"
+        submit-label="Submit"
+      >
+        <FormKit
+          type="password"
+          name="newPassword"
+          id="newPassword"
+          validation="required"
+          label="New Password"
+          placeholder="Password"
+        />
+        <FormKit
+          type="password"
+          name="confirmPassword"
+          id="confirmPassword"
+          validation="required|confirm:newPassword"
+          label="Confirm Password"
+          placeholder="Password"
+        />
+      </FormKit>
     </div>
   </div>
 </template>
