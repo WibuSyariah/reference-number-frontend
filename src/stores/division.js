@@ -32,6 +32,7 @@ export const useDivisionStore = defineStore({
           value: division.id,
         }));
       } catch (error) {
+        console.error(error);
         toast.error(`Something went wrong`, {
           position: "top-right",
           duration: 3000,

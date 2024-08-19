@@ -2,6 +2,8 @@
 import { FormKit } from "@formkit/vue";
 import { useUserStore } from "@/stores/user";
 import { mapActions } from "pinia";
+import { RouterLink } from "vue-router";
+
 export default {
   name: "Sidebar",
   data() {
@@ -83,22 +85,26 @@ export default {
         <span class="grid px-12 place-content-center text-xs">Logo</span>
 
         <ul class="mt-6 space-y-1">
-          <li>
-            <a
-              href="#"
-              class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
-            >
-              Generate
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
-            >
-              List
-            </a>
-          </li>
+          <RouterLink to="/">
+            <li>
+              <a
+                href="#"
+                class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
+              >
+                Generate
+              </a>
+            </li>
+          </RouterLink>
+          <RouterLink to="/list">
+            <li>
+              <a
+                href="#"
+                class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
+              >
+                List
+              </a>
+            </li>
+          </RouterLink>
           <li
             class="block rounded-lg px-4 pt-2 text-sm font-medium text-gray-500 hover:text-gray-700 text-nowrap cursor-pointer flex justify-between"
             @click="masterDataToggle"
@@ -159,7 +165,7 @@ export default {
     </div>
     <div
       @click="sidebarToggle"
-      class="cursor-pointer justify-center flex bg-gray-400 shadow rounded-r items-center text-white"
+      class="cursor-pointer justify-center flex bg-gray-400 shadow rounded-r items-center text-white w-4"
     >
       <i class="material-symbols-outlined">{{ sidebarIcon }}</i>
     </div>

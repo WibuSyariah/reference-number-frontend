@@ -45,8 +45,8 @@ export const useUserStore = defineStore({
       const accessToken = localStorage.getItem("accessToken");
       try {
         const res = await axios({
-          method: "put",
-          url: `${baseUrl}${apiPrefix}/user`,
+          method: "patch",
+          url: `${baseUrl}${apiPrefix}/user/password`,
           data: input,
           headers: {
             Authorization: `Bearer ${accessToken}`,

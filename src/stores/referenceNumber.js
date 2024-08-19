@@ -11,11 +11,15 @@ export const useReferenceNumberStore = defineStore({
   state: () => ({
     referenceNumber: "",
     referenceNumbers: [],
+    limit: 10,
+    currentPage: 1,
+    totalPages: 1,
+    query: {}
   }),
   getters: {},
   actions: {
     async generate(input) {
-      const accessToken = localStorage.getItem("accessToken")
+      const accessToken = localStorage.getItem("accessToken");
       try {
         const res = await axios({
           method: "post",
@@ -37,13 +41,40 @@ export const useReferenceNumberStore = defineStore({
             queue: true,
           });
         } else {
-          console.log(error)
+          console.error(error);
           toast.error(`Something went wrong`, {
             position: "top-right",
             duration: 3000,
             queue: true,
           });
         }
+      }
+    },
+
+    async fetchReferenceNumber(params) {
+      const accessToken = localStorage.getItem("accessToken");
+      try {
+        const res = await axios({
+          method: "get",
+          url: `${baseUrl}${apiPrefix}/reference-number`,
+          params: params ? params : {},
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }); 
+
+        console.log(res.data.data)
+        this.totalPages = res.data.data.totalPages
+        this.currentPage = res.data.data.currentPage
+        this.referenceNumbers = res.data.data.referenceNumbers;
+    
+      } catch (error) {
+        console.error(error);
+        toast.error(`Something went wrong`, {
+          position: "top-right",
+          duration: 3000,
+          queue: true,
+        });
       }
     },
   },

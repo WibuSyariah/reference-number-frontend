@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
-import App from "@/App.vue";
 import GeneratePage from "@/views/GeneratePage.vue";
 import LoginPage from "@/views/LoginPage.vue";
+import ListPage from "@/views/ListPage.vue";
 
 const routes = [
   {
@@ -9,12 +9,12 @@ const routes = [
     component: GeneratePage,
   },
   {
-    path: "/generate",
-    component: GeneratePage,
-  },
-  {
     path: "/login",
     component: LoginPage,
+  },
+  {
+    path: "/list",
+    component: ListPage,
   },
 ];
 
