@@ -44,8 +44,8 @@ export default {
     },
   },
   components: {
-    Sidebar
-  }
+    Sidebar,
+  },
 };
 </script>
 

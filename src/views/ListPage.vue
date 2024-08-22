@@ -9,36 +9,20 @@ import dayjs from "dayjs";
 export default {
   name: "ListPage",
   data() {
-    return {};
+    return {
+      today: this.generateToday(),
+      firstDay: this.generateFirstDay(),
+    };
   },
   mounted() {
-    this.fetchReferenceNumber({
-      limit: this.limit,
-      currentPage: this.currentPage,
-    });
+    this.fetchReferenceNumber(this.query);
     this.fetchCompany();
     this.fetchDivision();
   },
   computed: {
-    ...mapWritableState(useReferenceNumberStore, [
-      "referenceNumbers",
-      "limit",
-      "currentPage",
-      "totalPages",
-      "query",
-    ]),
+    ...mapWritableState(useReferenceNumberStore, ["referenceNumbers", "query"]),
     ...mapWritableState(useCompanyStore, ["companyDropdown"]),
     ...mapWritableState(useDivisionStore, ["divisionDropdown"]),
-
-    today() {
-      const today = dayjs();
-      const formattedToday = today.format("YYYY-MM-DD");
-      return formattedToday;
-    },
-
-    firstDay() {
-      return "1970-01-01";
-    },
   },
   components: {
     Sidebar,
@@ -48,47 +32,50 @@ export default {
     ...mapActions(useCompanyStore, ["fetchCompany"]),
     ...mapActions(useDivisionStore, ["fetchDivision"]),
 
+    generateToday() {
+      const today = dayjs();
+      const formattedToday = today.format("YYYY-MM-DD");
+      return formattedToday;
+    },
+
+    generateFirstDay() {
+      return "1970-01-01";
+    },
+
     formatDate(dateString) {
       return dayjs(dateString).format("DD/MM/YYYY");
     },
 
     async filterHandler(values) {
-      this.query = values;
-      await this.fetchReferenceNumber({
-        ...values,
-        limit: this.limit,
-        currentPage: this.currentPage,
-      });
+      this.query = {
+        ...this.query,
+        ...values
+      }
+
+      this.query.currentPage = 1
+      await this.fetchReferenceNumber(this.query);
     },
 
     async clearFilterHandler() {
-      this.query = {};
-      this.currentPage = 1;
+      this.query = {
+        limit: 10,
+        currentPage: 1,
+        totalPages: 1,
+      };
 
-      await this.fetchReferenceNumber({
-        limit: this.limit,
-        currentPage: this.currentPage,
-      });
+      await this.fetchReferenceNumber(this.query);
     },
 
     async nextPage() {
-      this.currentPage++;
+      this.query.currentPage++;
 
-      await this.fetchReferenceNumber({
-        ...this.query,
-        limit: this.limit,
-        currentPage: this.currentPage,
-      });
+      await this.fetchReferenceNumber(this.query);
     },
 
     async backPage() {
-      this.currentPage--;
+      this.query.currentPage--;
 
-      await this.fetchReferenceNumber({
-        ...this.query,
-        limit: this.limit,
-        currentPage: this.currentPage,
-      });
+      await this.fetchReferenceNumber(this.query);
     },
   },
 };
@@ -178,7 +165,7 @@ export default {
     </FormKit>
 
     <div
-      class="container overflow-x-auto mx-auto  border border-black border-solid rounded w-max"
+      class="container overflow-x-auto mx-auto border border-black border-solid rounded w-max"
     >
       <table class="min-w-full divide-y-2 divide-black bg-gray-300 text-sm">
         <thead class="ltr:text-left rtl:text-right">
@@ -236,7 +223,7 @@ export default {
         <a
           href="#"
           class="inline-flex size-8 items-center justify-center rounded border border-black border-solid bg-gray-300 text-gray-900 rtl:rotate-180"
-          v-if="currentPage !== 1"
+          v-if="this.query.currentPage > 1"
           @click="backPage"
         >
           <span class="sr-only">Next Page</span>
@@ -254,16 +241,16 @@ export default {
           </svg>
         </a>
 
-        <p class="text-xs text-gray-900">
-          {{ this.currentPage }}
+        <p class="text-xs text-gray-900" v-if="this.query.totalPages > 0">
+          {{ this.query.currentPage }}
           <span class="mx-0.25">/</span>
-          {{ this.totalPages }}
+          {{ this.query.totalPages }}
         </p>
 
         <a
           href="#"
           class="inline-flex size-8 items-center justify-center rounded border border-black border-solid bg-gray-300 text-gray-900 rtl:rotate-180"
-          v-if="totalPages !== currentPage"
+          v-if="this.query.totalPages !== this.query.currentPage && this.query.totalPages !== 0"
           @click="nextPage"
         >
           <span class="sr-only">Next Page</span>
@@ -281,6 +268,9 @@ export default {
           </svg>
         </a>
       </div>
+    </div>
+    <div v-if="this.referenceNumbers.length === 0">
+      <p class="font-bold text-xl">No Data Found</p>
     </div>
   </div>
 </template>

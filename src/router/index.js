@@ -2,6 +2,9 @@ import { createRouter, createWebHistory } from "vue-router";
 import GeneratePage from "@/views/GeneratePage.vue";
 import LoginPage from "@/views/LoginPage.vue";
 import ListPage from "@/views/ListPage.vue";
+import UserPage from "@/views/UserPage.vue";
+import CompanyPage from "@/views/CompanyPage.vue";
+import DivisionPage from "@/views/DivisionPage.vue";
 
 const routes = [
   {
@@ -16,6 +19,18 @@ const routes = [
     path: "/list",
     component: ListPage,
   },
+  {
+    path: "/user",
+    component: UserPage,
+  },
+  {
+    path: "/company",
+    component: CompanyPage,
+  },
+  {
+    path: "/division",
+    component: DivisionPage,
+  },
 ];
 
 const router = createRouter({
@@ -28,6 +43,8 @@ router.beforeEach((to, from, next) => {
 
   if (!accessToken && to.path !== "/login") {
     next("/login");
+  } else if (accessToken && to.path === "/login") {
+    next("/");
   } else {
     next();
   }

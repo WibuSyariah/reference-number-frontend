@@ -13,13 +13,14 @@ export default {
       showMasterData: false,
       masterDataIcon: "keyboard_arrow_down",
       showModal: false,
+      role: localStorage.getItem("role"),
     };
   },
   mounted() {
-    document.addEventListener("keydown", this.handleEscKey);
+    document.addEventListener("keydown", this.escKeyHandler);
   },
   beforeUnmount() {
-    document.removeEventListener("keydown", this.handleEscKey);
+    document.removeEventListener("keydown", this.escKeyHandler);
   },
   methods: {
     ...mapActions(useUserStore, ["changePassword"]),
@@ -47,7 +48,7 @@ export default {
     modalToggle() {
       this.showModal = !this.showModal;
     },
-    handleEscKey(event) {
+    escKeyHandler(event) {
       if (event.key === "Escape") {
         this.showModal = false;
       }
@@ -87,57 +88,60 @@ export default {
         <ul class="mt-6 space-y-1">
           <RouterLink to="/">
             <li>
-              <a
-                href="#"
+              <div
                 class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
               >
                 Generate
-              </a>
+              </div>
             </li>
           </RouterLink>
           <RouterLink to="/list">
             <li>
-              <a
-                href="#"
+              <div
                 class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
               >
                 List
-              </a>
+              </div>
             </li>
           </RouterLink>
-          <li
-            class="block rounded-lg px-4 pt-2 text-sm font-medium text-gray-500 hover:text-gray-700 text-nowrap cursor-pointer flex justify-between"
-            @click="masterDataToggle"
-          >
-            <span>Master Data</span>
-            <i class="material-symbols-outlined">{{ masterDataIcon }}</i>
-          </li>
-          <ul v-show="showMasterData" class="border-t">
-            <li>
-              <a
-                href="#"
-                class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
-              >
-                User
-              </a>
+          <div v-if="role === 'SUPERADMIN'">
+            <li
+              class="block rounded-lg px-4 pt-2 text-sm font-medium text-gray-500 hover:text-gray-700 text-nowrap cursor-pointer flex justify-between"
+              @click="masterDataToggle"
+            >
+              <span>Master Data</span>
+              <i class="material-symbols-outlined">{{ masterDataIcon }}</i>
             </li>
-            <li>
-              <a
-                href="#"
-                class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
-              >
-                Company
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
-              >
-                Division
-              </a>
-            </li>
-          </ul>
+            <ul v-show="showMasterData" class="border-t">
+              <RouterLink to="/user">
+                <li>
+                  <div
+                    class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
+                  >
+                    User
+                  </div>
+                </li>
+              </RouterLink>
+              <RouterLink to="/company">
+                <li>
+                  <div
+                    class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
+                  >
+                    Company
+                  </div>
+                </li>
+              </RouterLink>
+              <RouterLink to="/division">
+                <li>
+                  <div
+                    class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
+                  >
+                    Division
+                  </div>
+                </li>
+              </RouterLink>
+            </ul>
+          </div>
         </ul>
       </div>
       <ul class="mb-4">

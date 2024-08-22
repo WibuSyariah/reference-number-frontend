@@ -24,7 +24,6 @@ export default {
           localStorage.setItem("accessToken", res.data.data.accessToken);
           localStorage.setItem("role", res.data.data.role);
 
-          this.isLoggedIn = true;
           this.$router.push("/");
 
           this.$toast.success("Logged in successfully");
@@ -74,7 +73,7 @@ export default {
               id="username"
               validation="required"
               label="Username"
-              placeholder="John Doe"
+              placeholder="John123"
             />
             <FormKit
               type="password"

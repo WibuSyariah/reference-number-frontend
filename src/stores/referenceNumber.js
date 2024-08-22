@@ -11,10 +11,11 @@ export const useReferenceNumberStore = defineStore({
   state: () => ({
     referenceNumber: "",
     referenceNumbers: [],
-    limit: 10,
-    currentPage: 1,
-    totalPages: 1,
-    query: {}
+    query: {
+      limit: 10,
+      currentPage: 1,
+      totalPages: 1,
+    },
   }),
   getters: {},
   actions: {
@@ -61,13 +62,12 @@ export const useReferenceNumberStore = defineStore({
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
-        }); 
+        });
 
-        console.log(res.data.data)
-        this.totalPages = res.data.data.totalPages
-        this.currentPage = res.data.data.currentPage
+        console.log(res.data.data);
+        this.query.totalPages = res.data.data.totalPages;
+        this.query.currentPage = res.data.data.currentPage;
         this.referenceNumbers = res.data.data.referenceNumbers;
-    
       } catch (error) {
         console.error(error);
         toast.error(`Something went wrong`, {
