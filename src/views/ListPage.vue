@@ -84,7 +84,7 @@ export default {
 <template>
   <Sidebar></Sidebar>
   <div
-    class="mx-auto w-3/4 my-8 p-8 bg-gray-200 container flex flex-col items-center rounded border shadow"
+    class="mx-auto w-5/6 my-8 p-8 bg-gray-200 container flex flex-col items-center rounded border shadow"
   >
     <FormKit
       type="form"
@@ -165,7 +165,7 @@ export default {
     </FormKit>
 
     <div
-      class="container overflow-x-auto mx-auto border border-black border-solid rounded w-max"
+      class="container overflow-x-auto border border-black border-solid rounded w-fit"
     >
       <table class="min-w-full divide-y-2 divide-black bg-gray-300 text-sm">
         <thead class="ltr:text-left rtl:text-right">

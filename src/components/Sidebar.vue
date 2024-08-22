@@ -81,7 +81,7 @@ export default {
   <div
     class="flex justify-between h-screen sticky top-0 bg-gray-200 shadow rounded-r"
   >
-    <div v-show="showSidebar" class="flex flex-col w-40">
+    <div v-show="showSidebar" class="flex flex-col w-fit">
       <div class="py-6 flex-grow">
         <span class="grid px-12 place-content-center text-xs">Logo</span>
 
