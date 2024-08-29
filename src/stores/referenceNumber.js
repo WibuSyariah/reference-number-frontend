@@ -32,6 +32,8 @@ export const useReferenceNumberStore = defineStore({
         });
 
         this.referenceNumber = res.data.data.referenceNumber;
+
+        return res
       } catch (error) {
         // Check if the error is an axios error
         if (error.response.data.statusCode === 401) {

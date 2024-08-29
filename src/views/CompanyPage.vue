@@ -2,7 +2,6 @@
 import { mapWritableState, mapActions } from "pinia";
 import { FormKit } from "@formkit/vue";
 import Sidebar from "@/components/Sidebar.vue";
-import dayjs from "dayjs";
 import { useCompanyStore } from "@/stores/company";
 export default {
   name: "CompanyPage",
@@ -35,10 +34,6 @@ export default {
       "createCompany",
       "deleteCompany",
     ]),
-
-    formatDate(dateString) {
-      return dayjs(dateString).format("DD/MM/YYYY");
-    },
 
     async filterHandler(values) {
       this.query = {
@@ -130,7 +125,7 @@ export default {
     <div
       class="flex flex-col items-center gap-4 bg-gray-300 border border-solid border-black rounded p-4"
     >
-      <h1 class="font-bold">Add Company</h1>
+      <h1 class="font-bold">Tambah Perusahaan</h1>
       <FormKit
         type="form"
         :actions="false"
@@ -138,33 +133,36 @@ export default {
           form: 'flex flex-col items-center justify-items-center justify-center',
         }"
         @submit="addCompanyHandler"
+        incomplete-message="Maaf, tidak semua kolom diisi dengan benar."
       >
         <div class="flex gap-4">
           <FormKit
             type="text"
             name="name"
-            id="name"
+            id="Nama Perusahaan"
             validation="required"
-            label="Company Name"
-            placeholder="SUBMARINE NETWORK UNIVERSE"
-            :classes="{
-              input: 'w-64',
+            placeholder="Nama Perusahaan"
+            :validation-messages="{
+              required: ({ node }) => {
+                return `${node.props.id} diperlukan.`;
+              },
             }"
           />
           <FormKit
             type="text"
             name="code"
-            id="code"
+            id="Kode Perusahaan"
             validation="required"
-            label="Company Code"
-            placeholder="SNU"
-            :classes="{
-              input: 'w-64',
+            placeholder="Kode Perusahaan"
+            :validation-messages="{
+              required: ({ node }) => {
+                return `${node.props.id} diperlukan.`;
+              },
             }"
           />
         </div>
         <div>
-          <FormKit type="submit" label="Add" />
+          <FormKit type="submit" label="Tambah" />
         </div>
       </FormKit>
     </div>
@@ -179,16 +177,13 @@ export default {
               Id
             </th>
             <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-              Name
+              Nama
             </th>
             <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-              Code
+              Kode
             </th>
             <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-              Create Date
-            </th>
-            <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-              Action
+              Aksi
             </th>
           </tr>
         </thead>
@@ -204,15 +199,12 @@ export default {
             <td class="whitespace-nowrap px-4 py-2 text-gray-700">
               {{ company.code }}
             </td>
-            <td class="whitespace-nowrap px-4 py-2 text-gray-700">
-              {{ formatDate(company.createdAt) }}
-            </td>
             <td class="flex gap-2 whitespace-nowrap px-4 py-2 text-gray-700">
               <button
                 class="inline-block rounded border border-red-600 bg-red-600 text-sm font-medium text-white hover:bg-transparent hover:text-red-600 focus:outline-none focus:ring active:text-red-500 w-16 h-8"
                 @click="deleteModalToggle(company.id)"
               >
-                Delete
+                Hapus
               </button>
             </td>
           </tr>
@@ -274,7 +266,7 @@ export default {
       </div>
     </div>
     <div v-if="this.companies.length === 0">
-      <p class="font-bold text-xl">No Data Found</p>
+      <p class="font-bold text-xl">Tidak ada data</p>
     </div>
     <div
       v-show="this.showDeleteModal"
@@ -285,12 +277,12 @@ export default {
         @click="cancelButtonHandler"
       ></div>
       <div
-        class="flex flex-col items-center justify-center justify-items-center modal bg-gray-100 rounded-lg absolute w-96 h-48 p-8"
+        class="flex flex-col items-center justify-center justify-items-center modal bg-gray-100 rounded-lg absolute w-72 h-48 p-8"
       >
-        <h1 class="my-4 font-bold text-xl">Are you sure want to delete?</h1>
+        <h1 class="my-4 font-bold text-xl">Apakah kamu yakin?</h1>
         <div class="flex gap-8">
-          <FormKit type="button" label="Cancel" @click="cancelButtonHandler" />
-          <FormKit type="submit" label="Delete" @click="deleteCompanyHandler" />
+          <FormKit type="button" label="Tidak" @click="cancelButtonHandler" />
+          <FormKit type="submit" label="Hapus" @click="deleteCompanyHandler" />
         </div>
       </div>
     </div>

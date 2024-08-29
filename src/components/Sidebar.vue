@@ -81,7 +81,10 @@ export default {
   <div
     class="flex justify-between h-screen sticky top-0 bg-gray-200 shadow rounded-r"
   >
-    <div v-show="showSidebar" class="flex flex-col w-fit">
+    <div
+      v-show="showSidebar"
+      class="flex flex-col w-max overflow-x-hidden overflow-y-auto"
+    >
       <div class="py-6 flex-grow">
         <span class="grid px-12 place-content-center text-xs">Logo</span>
 
@@ -91,7 +94,7 @@ export default {
               <div
                 class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
               >
-                Generate
+                Buat
               </div>
             </li>
           </RouterLink>
@@ -100,7 +103,7 @@ export default {
               <div
                 class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
               >
-                List
+                Daftar
               </div>
             </li>
           </RouterLink>
@@ -109,7 +112,7 @@ export default {
               class="block rounded-lg px-4 pt-2 text-sm font-medium text-gray-500 hover:text-gray-700 text-nowrap cursor-pointer flex justify-between"
               @click="masterDataToggle"
             >
-              <span>Master Data</span>
+              <span>Data Master</span>
               <i class="material-symbols-outlined">{{ masterDataIcon }}</i>
             </li>
             <ul v-show="showMasterData" class="border-t">
@@ -118,7 +121,7 @@ export default {
                   <div
                     class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
                   >
-                    User
+                    Pengguna
                   </div>
                 </li>
               </RouterLink>
@@ -127,7 +130,7 @@ export default {
                   <div
                     class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
                   >
-                    Company
+                    Perusahaan
                   </div>
                 </li>
               </RouterLink>
@@ -136,7 +139,7 @@ export default {
                   <div
                     class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
                   >
-                    Division
+                    Divisi
                   </div>
                 </li>
               </RouterLink>
@@ -149,13 +152,13 @@ export default {
           class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 cursor-pointer"
           @click="modalToggle"
         >
-          Change Password
+          Ganti Password
         </li>
         <li
           class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 cursor-pointer"
           @click="logoutHandler"
         >
-          Log Out
+          Keluar
         </li>
         <a href="https://github.com/WibuSyariah" target="_blank">
           <li
@@ -182,27 +185,41 @@ export default {
       class="modal-backdrop fixed inset-0 bg-black opacity-50"
       @click="modalToggle"
     ></div>
-    <div class="flex flex-col modal bg-gray-100 rounded-lg absolute p-8">
+    <div
+      class="flex flex-col modal bg-gray-100 rounded-lg absolute pt-8 pb-4 px-12"
+    >
       <FormKit
         type="form"
         @submit="changePasswordHandler"
-        submit-label="Submit"
+        submit-label="Ganti"
+        incomplete-message="Maaf, tidak semua kolom diisi dengan benar."
       >
         <FormKit
           type="password"
           name="newPassword"
-          id="newPassword"
+          id="Kata Sandi Baru"
           validation="required"
-          label="New Password"
-          placeholder="Password"
+          placeholder="Kata Sandi Baru"
+          :validation-messages="{
+            required: ({ node }) => {
+              return `${node.props.id} diperlukan.`;
+            },
+          }"
         />
         <FormKit
           type="password"
           name="confirmPassword"
-          id="confirmPassword"
+          id="Konfirmasi Kata Sandi"
           validation="required|confirm:newPassword"
-          label="Confirm Password"
-          placeholder="Password"
+          placeholder="Konfirmasi Kata Sandi"
+          :validation-messages="{
+            required: ({ node }) => {
+              return `${node.props.id} diperlukan.`;
+            },
+            confirm: ({ node }) => {
+              return `Kata sandi tidak sama.`;
+            },
+          }"
         />
       </FormKit>
     </div>

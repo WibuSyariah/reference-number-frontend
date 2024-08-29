@@ -11,7 +11,6 @@ export default {
   data() {
     return {
       today: this.generateToday(),
-      firstDay: this.generateFirstDay(),
     };
   },
   mounted() {
@@ -38,10 +37,6 @@ export default {
       return formattedToday;
     },
 
-    generateFirstDay() {
-      return "1970-01-01";
-    },
-
     formatDate(dateString) {
       return dayjs(dateString).format("DD/MM/YYYY");
     },
@@ -49,10 +44,10 @@ export default {
     async filterHandler(values) {
       this.query = {
         ...this.query,
-        ...values
-      }
+        ...values,
+      };
 
-      this.query.currentPage = 1
+      this.query.currentPage = 1;
       await this.fetchReferenceNumber(this.query);
     },
 
@@ -102,8 +97,8 @@ export default {
             type="date"
             name="startDate"
             id="startDate"
-            label="Start Date"
-            :value="firstDay"
+            label="Tanggal Awal"
+            :value="today"
             :classes="{
               input: 'h-4 w-48', // Adjust height as needed
             }"
@@ -112,7 +107,7 @@ export default {
             type="date"
             name="endDate"
             id="endDate"
-            label="End Date"
+            label="Tanggal Akhir"
             :value="today"
             :classes="{
               input: 'h-4 w-48', // Adjust height as needed
@@ -122,21 +117,23 @@ export default {
         <div>
           <FormKit
             type="select"
-            label="Company"
+            label="Perusahaan"
             name="companyId"
-            :options="[{ label: '' }, ...companyDropdown]"
+            :options="companyDropdown"
             :classes="{
               input: 'w-56', // Adjust height as needed
             }"
+            placeholder="Pilih Perusahaan"
           />
           <FormKit
             type="select"
-            label="Division"
+            label="Divisi"
             name="divisionId"
-            :options="[{ label: '' }, ...divisionDropdown]"
+            :options="divisionDropdown"
             :classes="{
               input: 'w-56', // Adjust height as needed
             }"
+            placeholder="Pilih Divisi"
           />
         </div>
         <div class="flex flex-col text-center items-center">
@@ -153,7 +150,7 @@ export default {
           />
           <FormKit
             type="button"
-            label="Clear Filter"
+            label="Reset Filter"
             :classes="{
               outer: 'mt-3',
               input: '',
@@ -171,22 +168,22 @@ export default {
         <thead class="ltr:text-left rtl:text-right">
           <tr>
             <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-              Reference Number
+              Nomor Surat
             </th>
             <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-              Date
+              Tanggal
             </th>
             <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-              From
+              Dari
             </th>
             <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-              Division
+              Divisi
             </th>
             <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-              Subject
+              Perihal Surat
             </th>
             <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-              For
+              Untuk
             </th>
           </tr>
         </thead>
@@ -250,7 +247,10 @@ export default {
         <a
           href="#"
           class="inline-flex size-8 items-center justify-center rounded border border-black border-solid bg-gray-300 text-gray-900 rtl:rotate-180"
-          v-if="this.query.totalPages !== this.query.currentPage && this.query.totalPages !== 0"
+          v-if="
+            this.query.totalPages !== this.query.currentPage &&
+            this.query.totalPages !== 0
+          "
           @click="nextPage"
         >
           <span class="sr-only">Next Page</span>

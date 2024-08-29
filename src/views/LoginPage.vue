@@ -62,27 +62,42 @@ export default {
           <h1
             class="mt-6 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl"
           >
-            Reference Number Generator
+            Nomor Surat
           </h1>
           <br />
 
-          <FormKit type="form" @submit="loginHandler" submit-label="Login">
+          <FormKit
+            type="form"
+            @submit="loginHandler"
+            submit-label="Masuk"
+            incomplete-message="Maaf, tidak semua kolom diisi dengan benar."
+          >
             <FormKit
               type="text"
               name="username"
-              id="username"
+              id="Nama Pengguna"
               validation="required"
-              label="Username"
-              placeholder="John123"
+              placeholder="Nama Pengguna"
+              :validation-messages="{
+                required: ({ node }) => {
+                  return `${node.props.id} diperlukan.`;
+                },
+              }"
             />
+            <br />
             <FormKit
               type="password"
               name="password"
-              id="password"
+              id="Kata Sandi"
               validation="required"
-              label="Password"
-              placeholder="Password"
+              placeholder="Kata Sandi"
+              :validation-messages="{
+                required: ({ node }) => {
+                  return `${node.props.id} diperlukan.`;
+                },
+              }"
             />
+            <br />
           </FormKit>
         </div>
       </main>

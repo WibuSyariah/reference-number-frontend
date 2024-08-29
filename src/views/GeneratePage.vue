@@ -8,7 +8,10 @@ import Sidebar from "@/components/Sidebar.vue";
 export default {
   name: "GeneratePage",
   data() {
-    return {};
+    return {
+      showModal: false,
+      formData: {},
+    };
   },
   mounted() {
     this.fetchCompany();
@@ -28,6 +31,8 @@ export default {
       navigator.clipboard
         .writeText(`${this.referenceNumber}`)
         .then(() => {
+          this.showModal = false;
+          this.formData = {};
           this.$toast.success("Copied to clipboard!");
         })
         .catch((err) => {
@@ -35,9 +40,14 @@ export default {
         });
     },
 
-    async handleSubmit(values) {
+    async handleSubmit() {
       try {
-        await this.generate(values);
+        const res = await this.generate(this.formData);
+
+        if (res.status === 201) {
+          // Check for successful response
+          this.showModal = true;
+        }
       } catch (error) {
         console.error(error);
       }
@@ -51,66 +61,108 @@ export default {
 
 <template>
   <Sidebar></Sidebar>
-  <div class="container flex items-center justify-between mt-8">
+  <div class="container flex items-center">
     <div
-      class="container flex flex-col items-center bg-gray-100 pt-8 pb-4 border rounded border-hidden w-96 border-transparent shadow mx-auto"
+      class="container flex flex-col items-center bg-gray-100 pt-8 pb-4 border rounded border-hidden w-96 border-transparent shadow mx-auto my-8"
     >
-      <FormKit type="form" @submit="handleSubmit" submit-label="Generate">
+      <FormKit
+        type="form"
+        @submit="handleSubmit"
+        submit-label="Buat"
+        v-model="formData"
+        incomplete-message="Maaf, tidak semua kolom diisi dengan benar."
+      >
         <FormKit
           type="select"
-          label="Company"
-          placeholder="Select your company"
+          label="Perusahaan"
           name="companyId"
           :options="companyDropdown"
           validation="required"
+          placeholder="Pilih Perusahaan"
+          persistent="true"
+          validation-visibility="live"
+          :validation-messages="{
+            required: ({ node }) => {
+              return `${node.props.label} diperlukan.`;
+            },
+          }"
         />
         <FormKit
           type="text"
           name="applicantName"
           id="applicantName"
           validation="required"
-          label="From"
-          placeholder="John Doe"
+          label="Dari"
+          validation-visibility="live"
+          :validation-messages="{
+            required: ({ node }) => {
+              return `${node.props.label} diperlukan.`;
+            },
+          }"
         />
         <FormKit
           type="select"
-          label="Division"
-          placeholder="Select your division"
+          label="Divisi"
           name="divisionId"
           :options="divisionDropdown"
           validation="required"
+          placeholder="Pilih Divisi"
+          validation-visibility="live"
+          :validation-messages="{
+            required: ({ node }) => {
+              return `${node.props.label} diperlukan.`;
+            },
+          }"
         />
         <FormKit
           type="text"
           name="letterSubject"
           id="letterSubject"
           validation="required"
-          label="Subject"
-          placeholder="Subject of the letter"
+          label="Perihal Surat"
+          validation-visibility="live"
+          :validation-messages="{
+            required: ({ node }) => {
+              return `${node.props.label} diperlukan.`;
+            },
+          }"
         />
         <FormKit
           type="text"
           name="addressedTo"
           id="addressedTo"
           validation="required"
-          label="To"
-          placeholder="John Doe"
+          label="Untuk"
+          validation-visibility="live"
+          :validation-messages="{
+            required: ({ node }) => {
+              return `${node.props.label} diperlukan.`;
+            },
+          }"
         />
         <br />
       </FormKit>
     </div>
     <div
-      class="mr-auto w-64 bg-gray-100 border-transparent shadow container flex flex-col items-center text-nowrap bg-gray-100 p-8 border rounded border-hidden"
+      v-if="showModal"
+      class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto"
     >
-      <p>Your Reference Number</p>
-      <br />
-      <p>{{ referenceNumber || "XXX/XXX/XXX/XXX" }}</p>
-      <br />
-      <FormKit
-        type="submit"
-        label="Copy to clipboard"
-        @click="copyToClipboard"
-      />
+      <div
+        class="modal-backdrop fixed inset-0 bg-black opacity-50"
+      ></div>
+      <div
+        class="flex flex-col items-center modal bg-gray-100 rounded-lg absolute p-12"
+      >
+        <p>Nomor Surat</p>
+        <br />
+        <p>{{ referenceNumber || "---/---/---/---" }}</p>
+        <br />
+        <FormKit
+          type="button"
+          label="Salin ke papan klip"
+          @click="copyToClipboard"
+        />
+      </div>
     </div>
   </div>
 </template>
