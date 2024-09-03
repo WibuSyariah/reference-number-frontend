@@ -107,6 +107,15 @@ export default {
               </div>
             </li>
           </RouterLink>
+          <RouterLink to="/archive" v-if="role === 'SUPERADMIN'">
+            <li>
+              <div
+                class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
+              >
+                Arsip
+              </div>
+            </li>
+          </RouterLink>
           <div v-if="role === 'SUPERADMIN'">
             <li
               class="block rounded-lg px-4 pt-2 text-sm font-medium text-gray-500 hover:text-gray-700 text-nowrap cursor-pointer flex justify-between"

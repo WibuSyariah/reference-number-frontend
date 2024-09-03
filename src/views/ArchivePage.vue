@@ -6,20 +6,24 @@ import { useCompanyStore } from "@/stores/company";
 import { useDivisionStore } from "@/stores/division";
 import Sidebar from "@/components/Sidebar.vue";
 import dayjs from "dayjs";
+
 export default {
-  name: "ListPage",
+  name: "ArchivePage",
   data() {
-    return {
-      today: this.generateToday(),
-    };
+    return {};
   },
   mounted() {
-    this.fetchReferenceNumber(this.query);
+    this.fetchYears();
+    this.fetchArchive(this.query);
     this.fetchCompany();
     this.fetchDivision();
   },
   computed: {
-    ...mapWritableState(useReferenceNumberStore, ["referenceNumbers", "query"]),
+    ...mapWritableState(useReferenceNumberStore, [
+      "referenceNumbers",
+      "query",
+      "years",
+    ]),
     ...mapWritableState(useCompanyStore, ["companyDropdown"]),
     ...mapWritableState(useDivisionStore, ["divisionDropdown"]),
   },
@@ -27,15 +31,9 @@ export default {
     Sidebar,
   },
   methods: {
-    ...mapActions(useReferenceNumberStore, ["fetchReferenceNumber"]),
+    ...mapActions(useReferenceNumberStore, ["fetchArchive", "fetchYears"]),
     ...mapActions(useCompanyStore, ["fetchCompany"]),
     ...mapActions(useDivisionStore, ["fetchDivision"]),
-
-    generateToday() {
-      const today = dayjs();
-      const formattedToday = today.format("YYYY-MM-DD");
-      return formattedToday;
-    },
 
     formatDate(dateString) {
       return dayjs(dateString).format("DD/MM/YYYY");
@@ -48,7 +46,7 @@ export default {
       };
 
       this.query.currentPage = 1;
-      await this.fetchReferenceNumber(this.query);
+      await this.fetchArchive(this.query);
     },
 
     async clearFilterHandler() {
@@ -58,19 +56,19 @@ export default {
         totalPages: 1,
       };
 
-      await this.fetchReferenceNumber(this.query);
+      await this.fetchArchive(this.query);
     },
 
     async nextPage() {
       this.query.currentPage++;
 
-      await this.fetchReferenceNumber(this.query);
+      await this.fetchArchive(this.query);
     },
 
     async backPage() {
       this.query.currentPage--;
 
-      await this.fetchReferenceNumber(this.query);
+      await this.fetchArchive(this.query);
     },
   },
 };
@@ -79,7 +77,7 @@ export default {
 <template>
   <Sidebar></Sidebar>
   <div
-    class="mx-auto w-5/6 p-8 my-8 bg-gray-200 container flex flex-col items-center justify-center rounded border shadow"
+    class="mx-auto w-5/6 my-8 p-8 bg-gray-200 container flex flex-col items-center rounded border shadow"
   >
     <FormKit
       type="form"
@@ -89,32 +87,18 @@ export default {
         form: 'flex flex-col m-4 gap-4 items-center justify-items-center justify-center',
       }"
     >
-      <div
-        class="flex items-center justify-items-center content-center justify-center gap-4"
-      >
-        <div>
+      <div class="flex flex-col items-center">
+        <div class="flex gap-4">
           <FormKit
-            type="date"
-            name="startDate"
-            id="startDate"
-            label="Tanggal Awal"
-            :value="today"
+            type="select"
+            label="Tahun"
+            name="year"
+            :options="years"
             :classes="{
-              input: 'h-4 w-48', // Adjust height as needed
+              input: 'w-56', // Adjust height as needed
             }"
+            placeholder="Pilih Tahun"
           />
-          <FormKit
-            type="date"
-            name="endDate"
-            id="endDate"
-            label="Tanggal Akhir"
-            :value="today"
-            :classes="{
-              input: 'h-4 w-48', // Adjust height as needed
-            }"
-          />
-        </div>
-        <div>
           <FormKit
             type="select"
             label="Perusahaan"
@@ -136,12 +120,11 @@ export default {
             placeholder="Pilih Divisi"
           />
         </div>
-        <div class="flex flex-col text-center items-center">
+        <div class="flex text-center items-center gap-4">
           <FormKit
             type="submit"
             label="Filter"
             :classes="{
-              outer: 'mt-7',
               input:
                 'w-32 flex items-center text-center justify-center justify-items-center',
               label:
@@ -152,7 +135,7 @@ export default {
             type="button"
             label="Reset Filter"
             :classes="{
-              outer: 'mt-3',
+              // outer: 'mt-3',
               input: '',
             }"
             @click="clearFilterHandler"
@@ -160,6 +143,7 @@ export default {
         </div>
       </div>
     </FormKit>
+
     <div
       class="container overflow-x-auto border border-black border-solid rounded w-fit"
     >

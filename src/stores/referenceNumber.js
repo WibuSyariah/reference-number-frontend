@@ -16,6 +16,7 @@ export const useReferenceNumberStore = defineStore({
       currentPage: 1,
       totalPages: 1,
     },
+    years: [],
   }),
   getters: {},
   actions: {
@@ -33,7 +34,7 @@ export const useReferenceNumberStore = defineStore({
 
         this.referenceNumber = res.data.data.referenceNumber;
 
-        return res
+        return res;
       } catch (error) {
         // Check if the error is an axios error
         if (error.response.data.statusCode === 401) {
@@ -66,7 +67,58 @@ export const useReferenceNumberStore = defineStore({
           },
         });
 
-        console.log(res.data.data);
+        // console.log(res.data.data);
+        this.query.totalPages = res.data.data.totalPages;
+        this.query.currentPage = res.data.data.currentPage;
+        this.referenceNumbers = res.data.data.referenceNumbers;
+      } catch (error) {
+        console.error(error);
+        toast.error(`Something went wrong`, {
+          position: "top-right",
+          duration: 3000,
+          queue: true,
+        });
+      }
+    },
+    async fetchYears() {
+      const accessToken = localStorage.getItem("accessToken");
+      try {
+        const res = await axios({
+          method: "get",
+          url: `${baseUrl}${apiPrefix}/reference-number/years`,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        // console.log(res.data.data);
+        this.years = res.data.data.years;
+        this.years = this.years.map((year) => ({
+          label: year.year,
+          value: year.year,
+        }));
+      } catch (error) {
+        console.error(error);
+        toast.error(`Something went wrong`, {
+          position: "top-right",
+          duration: 3000,
+          queue: true,
+        });
+      }
+    },
+    async fetchArchive(params) {
+      const accessToken = localStorage.getItem("accessToken");
+      try {
+        const res = await axios({
+          method: "get",
+          url: `${baseUrl}${apiPrefix}/reference-number/archive`,
+          params: params ? params : {},
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        // console.log(res.data.data);
         this.query.totalPages = res.data.data.totalPages;
         this.query.currentPage = res.data.data.currentPage;
         this.referenceNumbers = res.data.data.referenceNumbers;

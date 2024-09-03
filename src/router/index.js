@@ -5,6 +5,7 @@ import ListPage from "@/views/ListPage.vue";
 import UserPage from "@/views/UserPage.vue";
 import CompanyPage from "@/views/CompanyPage.vue";
 import DivisionPage from "@/views/DivisionPage.vue";
+import ArchivePage from "@/views/ArchivePage.vue";
 
 const routes = [
   {
@@ -18,6 +19,10 @@ const routes = [
   {
     path: "/list",
     component: ListPage,
+  },
+  {
+    path: "/archive",
+    component: ArchivePage,
   },
   {
     path: "/user",
