@@ -11,6 +11,7 @@ export default {
   data() {
     return {
       today: this.generateToday(),
+      formData: {},
     };
   },
   mounted() {
@@ -58,6 +59,11 @@ export default {
         totalPages: 1,
       };
 
+      this.formData = {
+        startDate: this.today,
+        endDate: this.today
+      }
+
       await this.fetchReferenceNumber(this.query);
     },
 
@@ -88,6 +94,7 @@ export default {
       :classes="{
         form: 'flex flex-col m-4 gap-4 items-center justify-items-center justify-center',
       }"
+      v-model="formData"
     >
       <div
         class="flex items-center justify-items-center content-center justify-center gap-4"
@@ -160,9 +167,7 @@ export default {
         </div>
       </div>
     </FormKit>
-    <div
-      class="container overflow-x-auto border border-black border-solid rounded w-fit"
-    >
+    <div class="container border border-black border-solid rounded w-fit">
       <table class="min-w-full divide-y-2 divide-black bg-gray-300 text-sm">
         <thead class="ltr:text-left rtl:text-right">
           <tr>

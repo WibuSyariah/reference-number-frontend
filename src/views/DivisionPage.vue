@@ -148,7 +148,7 @@ export default {
     </div>
     <span class="flex mt-8 h-px bg-gray-500 w-5/6"> </span>
     <div
-      class="container overflow-x-auto mx-auto border border-black border-solid rounded w-max mt-8"
+      class="container mx-auto border border-black border-solid rounded w-max mt-8"
     >
       <table class="min-w-full divide-y-2 divide-black bg-gray-300 text-sm">
         <thead class="ltr:text-left rtl:text-right">

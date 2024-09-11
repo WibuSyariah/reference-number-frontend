@@ -244,7 +244,7 @@ export default {
       </div>
     </div>
     <div
-      class="container overflow-x-auto mx-auto border border-black border-solid rounded w-max"
+      class="container mx-auto border border-black border-solid rounded w-max"
     >
       <table class="min-w-full divide-y-2 divide-black bg-gray-300 text-sm">
         <thead class="ltr:text-left rtl:text-right">
