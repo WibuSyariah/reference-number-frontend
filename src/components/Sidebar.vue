@@ -11,7 +11,8 @@ export default {
       showSidebar: true,
       sidebarIcon: "arrow_left",
       showMasterData: false,
-      masterDataIcon: "keyboard_arrow_down",
+      showReferenceNumber: false,
+      dropdownIcon: "keyboard_arrow_down",
       showModal: false,
       role: localStorage.getItem("role"),
     };
@@ -26,12 +27,10 @@ export default {
     ...mapActions(useUserStore, ["changePassword"]),
 
     masterDataToggle() {
-      if (this.masterDataIcon === "keyboard_arrow_down") {
-        this.masterDataIcon = "keyboard_arrow_up";
-      } else {
-        this.masterDataIcon = "keyboard_arrow_down";
-      }
       this.showMasterData = !this.showMasterData;
+    },
+    referenceNumberToggle() {
+      this.showReferenceNumber = !this.showReferenceNumber;
     },
     sidebarToggle() {
       if (this.sidebarIcon === "arrow_left") {
@@ -89,52 +88,63 @@ export default {
         <span class="grid px-12 place-content-center text-xs">Logo</span>
 
         <ul class="mt-6 space-y-1">
-          <RouterLink to="/">
-            <li>
-              <div
-                class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
-              >
-                Buat
-              </div>
+          <div>
+            <li
+              class="block rounded-lg px-4 pt-2 text-sm font-medium text-gray-500 hover:text-gray-700 text-nowrap cursor-pointer flex justify-between"
+              @click="referenceNumberToggle"
+            >
+              <span>Penomoran Surat</span>
+              <i class="material-symbols-outlined">{{ dropdownIcon }}</i>
             </li>
-          </RouterLink>
-          <RouterLink to="/list">
-            <li>
-              <div
-                class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
-              >
-                Daftar
-              </div>
-            </li>
-          </RouterLink>
-          <RouterLink to="/archive" v-if="role === 'SUPERADMIN'">
-            <li>
-              <div
-                class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
-              >
-                Arsip
-              </div>
-            </li>
-          </RouterLink>
-          <div v-if="role === 'SUPERADMIN'">
+            <ul v-show="showReferenceNumber" class="border-t">
+              <RouterLink to="/reference-number/create">
+                <li>
+                  <div
+                    class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
+                  >
+                    Create
+                  </div>
+                </li>
+              </RouterLink>
+              <RouterLink to="/reference-number/preview">
+                <li>
+                  <div
+                    class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
+                  >
+                    Preview
+                  </div>
+                </li>
+              </RouterLink>
+              <RouterLink to="/reference-number/archive" v-if="role === 'SUPERADMIN'">
+                <li>
+                  <div
+                    class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
+                  >
+                    Archive
+                  </div>
+                </li>
+              </RouterLink>
+            </ul>
+          </div>
+          <div v-if="role === 'SUPERADMIN' || 'ADMIN'">
             <li
               class="block rounded-lg px-4 pt-2 text-sm font-medium text-gray-500 hover:text-gray-700 text-nowrap cursor-pointer flex justify-between"
               @click="masterDataToggle"
             >
               <span>Data Master</span>
-              <i class="material-symbols-outlined">{{ masterDataIcon }}</i>
+              <i class="material-symbols-outlined">{{ dropdownIcon }}</i>
             </li>
             <ul v-show="showMasterData" class="border-t">
-              <RouterLink to="/user">
+              <RouterLink to="/master/user">
                 <li>
                   <div
                     class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
                   >
-                    Pengguna
+                    User
                   </div>
                 </li>
               </RouterLink>
-              <RouterLink to="/company">
+              <RouterLink to="/master/company">
                 <li>
                   <div
                     class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
@@ -143,12 +153,12 @@ export default {
                   </div>
                 </li>
               </RouterLink>
-              <RouterLink to="/division">
+              <RouterLink to="/master/division">
                 <li>
                   <div
                     class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
                   >
-                    Divisi
+                    Departemen
                   </div>
                 </li>
               </RouterLink>
@@ -161,22 +171,14 @@ export default {
           class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 cursor-pointer"
           @click="modalToggle"
         >
-          Ganti Password
+          Change Password
         </li>
         <li
           class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 cursor-pointer"
           @click="logoutHandler"
         >
-          Keluar
+          Log Out
         </li>
-        <a href="https://github.com/WibuSyariah" target="_blank">
-          <li
-            class="block rounded-lg px-4 py-2 mt-4 text-xs font-medium text-gray-500 hover:text-gray-700 flex items-center"
-          >
-            <i class="material-symbols-outlined mr-2">copyright</i>
-            <p>Aca</p>
-          </li>
-        </a>
       </ul>
     </div>
     <div
@@ -194,9 +196,10 @@ export default {
       class="modal-backdrop fixed inset-0 bg-black opacity-50"
       @click="modalToggle"
     ></div>
-    <div
-      class="flex flex-col modal bg-gray-100 rounded-lg absolute pt-8 pb-4 px-12"
-    >
+    <div class="flex flex-col modal bg-gray-100 rounded-lg absolute p-12">
+      <button class="absolute top-0 right-0 p-2" @click="modalToggle">
+        <i class="material-symbols-outlined">close</i>
+      </button>
       <FormKit
         type="form"
         @submit="changePasswordHandler"
@@ -206,9 +209,9 @@ export default {
         <FormKit
           type="password"
           name="newPassword"
-          id="Kata Sandi Baru"
+          id="Password Baru"
           validation="required"
-          placeholder="Kata Sandi Baru"
+          placeholder="Password Baru"
           :validation-messages="{
             required: ({ node }) => {
               return `${node.props.id} diperlukan.`;
@@ -218,15 +221,15 @@ export default {
         <FormKit
           type="password"
           name="confirmPassword"
-          id="Konfirmasi Kata Sandi"
+          id="Konfirmasi Password"
           validation="required|confirm:newPassword"
-          placeholder="Konfirmasi Kata Sandi"
+          placeholder="Konfirmasi Password"
           :validation-messages="{
             required: ({ node }) => {
               return `${node.props.id} diperlukan.`;
             },
             confirm: ({ node }) => {
-              return `Kata sandi tidak sama.`;
+              return `Password tidak sama.`;
             },
           }"
         />

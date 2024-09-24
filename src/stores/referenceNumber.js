@@ -1,9 +1,8 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import { useToast } from "vue-toast-notification";
+import { mode, baseUrl, apiPrefix } from "../../config/url";
 
-const baseUrl = "http://localhost:3000";
-const apiPrefix = "/api/v1";
 const toast = useToast();
 
 export const useReferenceNumberStore = defineStore({
@@ -25,7 +24,7 @@ export const useReferenceNumberStore = defineStore({
       try {
         const res = await axios({
           method: "post",
-          url: `${baseUrl}${apiPrefix}/reference-number`,
+          url: `${baseUrl[mode]}${apiPrefix}/reference-number`,
           data: input,
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -60,7 +59,7 @@ export const useReferenceNumberStore = defineStore({
       try {
         const res = await axios({
           method: "get",
-          url: `${baseUrl}${apiPrefix}/reference-number`,
+          url: `${baseUrl[mode]}${apiPrefix}/reference-number`,
           params: params ? params : {},
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -85,7 +84,7 @@ export const useReferenceNumberStore = defineStore({
       try {
         const res = await axios({
           method: "get",
-          url: `${baseUrl}${apiPrefix}/reference-number/years`,
+          url: `${baseUrl[mode]}${apiPrefix}/reference-number/years`,
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -111,7 +110,7 @@ export const useReferenceNumberStore = defineStore({
       try {
         const res = await axios({
           method: "get",
-          url: `${baseUrl}${apiPrefix}/reference-number/archive`,
+          url: `${baseUrl[mode]}${apiPrefix}/reference-number/archive`,
           params: params ? params : {},
           headers: {
             Authorization: `Bearer ${accessToken}`,

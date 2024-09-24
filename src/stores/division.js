@@ -1,9 +1,8 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import { useToast } from "vue-toast-notification";
+import { mode, baseUrl, apiPrefix } from "../../config/url";
 
-const baseUrl = "http://localhost:3000";
-const apiPrefix = "/api/v1";
 const toast = useToast();
 
 export const useDivisionStore = defineStore({
@@ -29,7 +28,7 @@ export const useDivisionStore = defineStore({
       try {
         const res = await axios({
           method: "get",
-          url: `${baseUrl}${apiPrefix}/division`,
+          url: `${baseUrl[mode]}${apiPrefix}/division`,
           params: params ? params : {},
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -57,7 +56,7 @@ export const useDivisionStore = defineStore({
       try {
         const res = await axios({
           method: "post",
-          url: `${baseUrl}${apiPrefix}/division/`,
+          url: `${baseUrl[mode]}${apiPrefix}/division/`,
           data: input,
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -89,7 +88,7 @@ export const useDivisionStore = defineStore({
       try {
         const res = await axios({
           method: "delete",
-          url: `${baseUrl}${apiPrefix}/division/${userId}`,
+          url: `${baseUrl[mode]}${apiPrefix}/division/${userId}`,
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },

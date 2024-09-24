@@ -62,22 +62,22 @@ export default {
           <h1
             class="mt-6 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl"
           >
-            Nomor Surat
+            Penomoran Surat
           </h1>
           <br />
 
           <FormKit
             type="form"
             @submit="loginHandler"
-            submit-label="Masuk"
+            submit-label="Login"
             incomplete-message="Maaf, tidak semua kolom diisi dengan benar."
           >
             <FormKit
               type="text"
               name="username"
-              id="Nama Pengguna"
+              id="Username"
               validation="required"
-              placeholder="Nama Pengguna"
+              placeholder="Username"
               :validation-messages="{
                 required: ({ node }) => {
                   return `${node.props.id} diperlukan.`;
@@ -88,9 +88,9 @@ export default {
             <FormKit
               type="password"
               name="password"
-              id="Kata Sandi"
+              id="Password"
               validation="required"
-              placeholder="Kata Sandi"
+              placeholder="Password"
               :validation-messages="{
                 required: ({ node }) => {
                   return `${node.props.id} diperlukan.`;

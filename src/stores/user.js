@@ -1,9 +1,8 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import { useToast } from "vue-toast-notification";
+import { mode, baseUrl, apiPrefix } from "../../config/url";
 
-const baseUrl = "http://localhost:3000";
-const apiPrefix = "/api/v1";
 const toast = useToast();
 
 export const useUserStore = defineStore({
@@ -27,7 +26,7 @@ export const useUserStore = defineStore({
       try {
         const res = await axios({
           method: "post",
-          url: `${baseUrl}${apiPrefix}/user/login`,
+          url: `${baseUrl[mode]}${apiPrefix}/user/login`,
           data: input,
         });
 
@@ -56,7 +55,7 @@ export const useUserStore = defineStore({
       try {
         const res = await axios({
           method: "patch",
-          url: `${baseUrl}${apiPrefix}/user/password`,
+          url: `${baseUrl[mode]}${apiPrefix}/user/password`,
           data: input,
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -88,7 +87,7 @@ export const useUserStore = defineStore({
       try {
         const res = await axios({
           method: "get",
-          url: `${baseUrl}${apiPrefix}/user`,
+          url: `${baseUrl[mode]}${apiPrefix}/user`,
           params: params ? params : {},
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -112,7 +111,7 @@ export const useUserStore = defineStore({
       try {
         const res = await axios({
           method: "post",
-          url: `${baseUrl}${apiPrefix}/user/`,
+          url: `${baseUrl[mode]}${apiPrefix}/user/`,
           data: input,
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -144,7 +143,7 @@ export const useUserStore = defineStore({
       try {
         const res = await axios({
           method: "delete",
-          url: `${baseUrl}${apiPrefix}/user/${userId}`,
+          url: `${baseUrl[mode]}${apiPrefix}/user/${userId}`,
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
