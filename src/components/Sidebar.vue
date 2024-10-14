@@ -115,7 +115,10 @@ export default {
                   </div>
                 </li>
               </RouterLink>
-              <RouterLink to="/reference-number/archive" v-if="role === 'SUPERADMIN'">
+              <RouterLink
+                to="/reference-number/archive"
+                v-if="role === 'ADMIN'"
+              >
                 <li>
                   <div
                     class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700"
@@ -126,7 +129,7 @@ export default {
               </RouterLink>
             </ul>
           </div>
-          <div v-if="role === 'SUPERADMIN' || 'ADMIN'">
+          <div v-if="role === 'ADMIN'">
             <li
               class="block rounded-lg px-4 pt-2 text-sm font-medium text-gray-500 hover:text-gray-700 text-nowrap cursor-pointer flex justify-between"
               @click="masterDataToggle"

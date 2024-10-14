@@ -123,16 +123,28 @@ export default {
             type="select"
             label="Departemen"
             name="divisionId"
-            :options="divisionDropdown"
             validation="required"
             placeholder="Pilih Departemen"
+            persistent="true"
             validation-visibility="live"
             :validation-messages="{
               required: ({ node }) => {
                 return `${node.props.label} diperlukan.`;
               },
             }"
-          />
+            :classes="{
+              input: 'text-black font-bold',
+            }"
+          >
+            <option
+              v-for="division in divisionDropdown"
+              :key="division.value"
+              class="text-xl text-black"
+              :value="division.value"
+            >
+              {{ division.label }}
+            </option>
+          </FormKit>
           <FormKit
             type="text"
             name="letterSubject"

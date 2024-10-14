@@ -16,7 +16,9 @@ const routes = [
   {
     path: "/",
     component: HomePage,
+    meta: { title: "Home" },
   },
+
   {
     path: "/reference-number",
     children: [
@@ -51,6 +53,10 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/:pathMatch(.*)*", // Vue Router 4 syntax (use '*' for Vue Router 3)
+    redirect: "/",
+  },
 ];
 
 const router = createRouter({
@@ -59,40 +65,49 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  document.title = to.meta.title || "Reference Number"; // Fallback title
+
   const accessToken = localStorage.getItem("accessToken");
   const role = localStorage.getItem("role");
+  console.log("ini role")
   const roleRoutes = {
-    USER: ["/create", "/", "/login", "/preview"],
-    ADMIN: [
-      "/",
+    USER: [
       "/login",
+      "/",
       "/reference-number/create",
       "/reference-number/preview",
-      "/reference-number/archive",
-      "/master/user",
-      "/master/company",
-      "/master/division",
     ],
-    SUPERADMIN: [
-      "/",
-      "/login",
-      "/reference-number/create",
-      "/reference-number/preview",
-      "/reference-number/archive",
-      "/master/user",
-      "/master/company",
-      "/master/division",
-    ],
+    ADMIN: ["/login", "/", "/reference-number", "/master"],
   };
 
   if (!accessToken && to.path !== "/login") {
     next("/login");
   } else if (accessToken && to.path === "/login") {
     next("/create");
-  } else if (role && !roleRoutes[role].includes(to.path)) {
-    next("/create"); // Redirect to home page if trying to access restricted routes
+  } else if (role) {
+    // Check if the current route is allowed for the role
+    const isAdmin = ["ADMIN"].includes(role);
+    console.log("masuk sini bjir")
+
+    if (isAdmin) {
+      // Allow access to any child routes under /reference-number and /master
+      const allowedPaths = roleRoutes[role];
+      const isAllowedPath = allowedPaths.some((route) => {
+        return to.path.startsWith(route);
+      });
+
+      if (!isAllowedPath) {
+        next("/create"); // Redirect if not allowed
+      } else {
+        next(); // Allow access
+      }
+    } else if (!roleRoutes[role].includes(to.path)) {
+      next("/"); // Redirect to home page if trying to access restricted routes
+    } else {
+      next(); // Allow access
+    }
   } else {
-    next();
+    next(); // No role, proceed
   }
 });
 

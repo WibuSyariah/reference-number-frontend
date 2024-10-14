@@ -174,7 +174,7 @@ export const useUserStore = defineStore({
       try {
         const res = await axios({
           method: "patch",
-          url: `${baseUrl}${apiPrefix}/user/${userId}`,
+          url: `${baseUrl[mode]}${apiPrefix}/user/${userId}`,
           data: input,
           headers: {
             Authorization: `Bearer ${accessToken}`,
