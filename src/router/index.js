@@ -16,7 +16,7 @@ const routes = [
   {
     path: "/",
     component: HomePage,
-    meta: { title: "Home" },
+    meta: { title: "Penomoran Surat" },
   },
 
   {
@@ -65,11 +65,10 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  document.title = to.meta.title || "Reference Number"; // Fallback title
+  document.title = to.meta.title || "Penomoran Surat"; // Fallback title
 
   const accessToken = localStorage.getItem("accessToken");
   const role = localStorage.getItem("role");
-  console.log("ini role")
   const roleRoutes = {
     USER: [
       "/login",
@@ -87,7 +86,6 @@ router.beforeEach((to, from, next) => {
   } else if (role) {
     // Check if the current route is allowed for the role
     const isAdmin = ["ADMIN"].includes(role);
-    console.log("masuk sini bjir")
 
     if (isAdmin) {
       // Allow access to any child routes under /reference-number and /master
