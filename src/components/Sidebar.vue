@@ -8,8 +8,8 @@ export default {
   name: "Sidebar",
   data() {
     return {
-      showSidebar: true,
-      sidebarIcon: "arrow_left",
+      showSidebar: false,
+      sidebarIcon: "arrow_right",
       showMasterData: false,
       showReferenceNumber: false,
       dropdownIcon: "keyboard_arrow_down",
@@ -78,15 +78,17 @@ export default {
 
 <template>
   <div
-    class="flex justify-between h-screen sticky top-0 bg-gray-200 shadow rounded-r"
+    class="flex h-screen sticky top-0 bg-gray-100 shadow text-nowrap w-fit"
+    v-show="showSidebar"
   >
-    <div
-      v-show="showSidebar"
-      class="flex flex-col w-max overflow-x-hidden overflow-y-auto"
-    >
-      <div class="py-6 flex-grow">
-        <span class="grid px-12 place-content-center text-xs">Logo</span>
-
+    <div class="flex flex-col overflow-x-hidden overflow-y-auto">
+      <div class="mt-4 mx-auto">
+        <img
+          class="w-32"
+          src="https://www.moda-holding.com/wp-content/uploads/2020/03/cropped-MODA-Holding-300x61-1.png"
+        />
+      </div>
+      <div class="flex-grow">
         <ul class="mt-6 space-y-1">
           <div>
             <li
@@ -184,12 +186,12 @@ export default {
         </li>
       </ul>
     </div>
-    <div
-      @click="sidebarToggle"
-      class="cursor-pointer justify-center flex bg-gray-400 shadow rounded-r items-center text-white w-4"
-    >
-      <i class="material-symbols-outlined">{{ sidebarIcon }}</i>
-    </div>
+  </div>
+  <div
+    @click="sidebarToggle"
+    class="cursor-pointer justify-center flex h-screen sticky bg-gray-200 shadow rounded-r items-center w-4"
+  >
+    <i class="material-symbols-outlined text-black">{{ sidebarIcon }}</i>
   </div>
   <div
     v-if="showModal"

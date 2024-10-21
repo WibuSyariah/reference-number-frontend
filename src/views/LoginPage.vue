@@ -24,9 +24,8 @@ export default {
           localStorage.setItem("accessToken", res.data.data.accessToken);
           localStorage.setItem("role", res.data.data.role);
 
-          this.$router.push("/");
-
           this.$toast.success("Logged in successfully");
+          this.$router.push("/");
         }
       } catch (error) {
         console.error(error);

@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomePage from "@/views/HomePage.vue";
 import GeneratePage from "@/views/GeneratePage.vue";
 import LoginPage from "@/views/LoginPage.vue";
 import ListPage from "@/views/ListPage.vue";
@@ -7,49 +6,51 @@ import UserPage from "@/views/UserPage.vue";
 import CompanyPage from "@/views/CompanyPage.vue";
 import DivisionPage from "@/views/DivisionPage.vue";
 import ArchivePage from "@/views/ArchivePage.vue";
+import AuthLayout from "@/components/AuthLayout.vue";
 
 const routes = [
   {
     path: "/login",
     component: LoginPage,
   },
-  {
-    path: "/",
-    component: HomePage,
-    meta: { title: "Penomoran Surat" },
-  },
 
   {
-    path: "/reference-number",
+    path: "/",
+    component: AuthLayout,
     children: [
       {
-        path: "create",
-        component: GeneratePage,
+        path: "reference-number",
+        children: [
+          {
+            path: "create",
+            component: GeneratePage,
+          },
+          {
+            path: "preview",
+            component: ListPage,
+          },
+          {
+            path: "archive",
+            component: ArchivePage,
+          },
+        ],
       },
       {
-        path: "preview",
-        component: ListPage,
-      },
-      {
-        path: "archive",
-        component: ArchivePage,
-      },
-    ],
-  },
-  {
-    path: "/master",
-    children: [
-      {
-        path: "user",
-        component: UserPage,
-      },
-      {
-        path: "company",
-        component: CompanyPage,
-      },
-      {
-        path: "division",
-        component: DivisionPage,
+        path: "/master",
+        children: [
+          {
+            path: "user",
+            component: UserPage,
+          },
+          {
+            path: "company",
+            component: CompanyPage,
+          },
+          {
+            path: "division",
+            component: DivisionPage,
+          },
+        ],
       },
     ],
   },

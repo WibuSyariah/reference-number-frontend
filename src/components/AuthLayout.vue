@@ -1,7 +1,11 @@
 <script>
 import Sidebar from "@/components/Sidebar.vue";
 export default {
-  name: "HomePage",
+  name: "AuthLayout",
+  data() {
+    return {};
+  },
+  computed: {},
   components: {
     Sidebar,
   },
@@ -11,7 +15,6 @@ export default {
 <template>
   <div class="flex">
     <Sidebar></Sidebar>
+    <RouterView></RouterView>
   </div>
 </template>
-
-<style scoped></style>
