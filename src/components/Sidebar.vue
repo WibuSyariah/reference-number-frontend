@@ -189,7 +189,7 @@ export default {
   </div>
   <div
     @click="sidebarToggle"
-    class="cursor-pointer justify-center flex h-screen sticky bg-gray-200 shadow rounded-r items-center w-4"
+    class="cursor-pointer justify-center flex h-screen sticky bg-gray-300 shadow rounded-r items-center w-4"
   >
     <i class="material-symbols-outlined text-black">{{ sidebarIcon }}</i>
   </div>

@@ -1,16 +1,24 @@
 <script>
 import { mapWritableState, mapActions } from "pinia";
 import { useUserStore } from "@/stores/user";
-import { FormKit } from "@formkit/vue";
+import { Form, Field } from "vee-validate";
+import * as yup from "yup";
 export default {
   name: "LoginPage",
   data() {
     return {
-      accessToken: localStorage.getItem("accessToken"),
+      validationSchema: yup.object({
+        username: yup.string().required("Username is required"),
+        password: yup.string().required("Password is required"),
+      }),
     };
   },
   computed: {
     ...mapWritableState(useUserStore, ["isLoggedIn"]),
+  },
+  components: {
+    Form,
+    Field,
   },
   methods: {
     ...mapActions(useUserStore, ["login"]),
@@ -25,7 +33,7 @@ export default {
           localStorage.setItem("role", res.data.data.role);
 
           this.$toast.success("Logged in successfully");
-          this.$router.push("/");
+          this.$router.push("/reference-number/create");
         }
       } catch (error) {
         console.error(error);
@@ -36,7 +44,7 @@ export default {
 </script>
 
 <template>
-  <section class="bg-gray-100 w-screen" v-if="!accessToken">
+  <section class="bg-gray-100 w-screen">
     <div class="lg:grid lg:min-h-screen lg:grid-cols-12 flex">
       <aside
         class="relative block h-16 lg:order-first lg:col-span-5 lg:h-full xl:col-span-6"
@@ -65,39 +73,53 @@ export default {
           </h1>
           <br />
 
-          <FormKit
-            type="form"
-            @submit="loginHandler"
-            submit-label="Login"
-            incomplete-message="Maaf, tidak semua kolom diisi dengan benar."
-          >
-            <FormKit
-              type="text"
-              name="username"
-              id="Username"
-              validation="required"
-              placeholder="Username"
-              :validation-messages="{
-                required: ({ node }) => {
-                  return `${node.props.id} diperlukan.`;
-                },
-              }"
-            />
-            <br />
-            <FormKit
-              type="password"
-              name="password"
-              id="Password"
-              validation="required"
-              placeholder="Password"
-              :validation-messages="{
-                required: ({ node }) => {
-                  return `${node.props.id} diperlukan.`;
-                },
-              }"
-            />
-            <br />
-          </FormKit>
+          <v-card class="mx-auto pa-12 pb-18" max-width="448" rounded="lg">
+            <!-- Form with VeeValidate -->
+            <Form
+              :validation-schema="validationSchema"
+              @submit="loginHandler"
+              class="flex flex-col gap-4"
+            >
+              <!-- Username Field -->
+
+              <Field name="username" v-slot="{ field, meta }">
+                <v-text-field
+                  v-bind="field"
+                  label="Username"
+                  placeholder="Enter your username"
+                  variant="outlined"
+                  :error-messages="meta.touched ? meta.errors : []"
+                ></v-text-field>
+              </Field>
+
+              <!-- Password Field -->
+
+              <Field name="password" v-slot="{ field, meta }">
+                <v-text-field
+                  v-bind="field"
+                  label="Password"
+                  placeholder="Enter your password"
+                  variant="outlined"
+                  type="password"
+                  @click:append-inner="visible = !visible"
+                  :error-messages="meta.touched ? meta.errors : []"
+                >
+                </v-text-field>
+              </Field>
+
+              <!-- Submit Button -->
+              <v-btn
+                type="submit"
+                class="mb-4"
+                color="blue"
+                size="large"
+                variant="tonal"
+                block
+              >
+                Log In
+              </v-btn>
+            </Form>
+          </v-card>
         </div>
       </main>
     </div>
